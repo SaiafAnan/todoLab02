@@ -32,28 +32,28 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start'
     },
     label: {
-      color: '#777', // Subtle color change
+      color: '#777', 
       fontSize: 16,
       marginRight: 10
     }
   },
   errorMessage: {
     container: {
-      backgroundColor: '#FFE0E0', // Soft red background for attention
+      backgroundColor: '#FFE0E0', 
       padding: 10,
       marginBottom: 20,
-      borderColor: '#FFCDD2', // Softer border color
+      borderColor: '#FFCDD2',
       borderWidth: 1,
-      borderLeftWidth: 5, // Emphasized left border
-      borderRadius: 4 // Rounded corners
+      borderLeftWidth: 5, 
+      borderRadius: 4 
     },
     label: {
-      color: '#D32F2F', // Darker red for the label
+      color: '#D32F2F', 
       fontSize: 14,
       fontWeight: 'bold'
     },
     text: {
-      color: '#D32F2F', // Consistent color for the text
+      color: '#D32F2F', 
       fontSize: 16
     }
   }

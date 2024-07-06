@@ -1,7 +1,6 @@
 // App.js
-
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, TextInput } from 'react-native';
 import Header from './src/components/Header/Header';
 import Tasks from './src/components/Tasks/Tasks';
 import Form from './src/components/Form/Form';
@@ -22,17 +21,14 @@ const firebaseConfig = {
   appId: "1:339829205055:web:b2d9e6f6e45bed884eb08a"
 };
 
-// Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
-// Creates the tab navigator object.
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
 
-  // Load tasks from Firebase Realtime Database on component mount
   useEffect(() => {
     const tasksRef = ref(database, 'tasks');
     onValue(tasksRef, (snapshot) => {
@@ -46,31 +42,28 @@ export default function App() {
     });
   }, []);
 
-  // Include a new task to the list and save to Firebase Realtime Database
   const handleAddTask = (taskDescription, taskDone) => {
     const newTaskRef = push(ref(database, 'tasks'));
-    update(newTaskRef, {
-      description: taskDescription,
-      done: taskDone
-    });
-  }
+    update(newTaskRef, { description: taskDescription, done: taskDone });
+  };
 
-  // Toggles the status of a task in the list and updates in Firebase Realtime Database
+  const handleUpdateTask = (id, newDescription, newDoneStatus) => {
+    const taskRef = ref(database, `tasks/${id}`);
+    update(taskRef, { description: newDescription, done: newDoneStatus });
+  };
+
   const handleStatusChange = (id) => {
     const taskRef = ref(database, `tasks/${id}`);
     const currentTask = tasks.find(task => task.id === id);
     if (currentTask) {
-      update(taskRef, {
-        done: !currentTask.done
-      });
+      update(taskRef, { done: !currentTask.done });
     }
-  }
+  };
 
-  // Remove a task from the list and from Firebase Realtime Database
   const handleTaskRemoval = (id) => {
     const taskRef = ref(database, `tasks/${id}`);
     remove(taskRef);
-  }
+  };
 
   return (
     <NavigationContainer>
@@ -87,15 +80,13 @@ export default function App() {
             )
           }}>
             {(props) => (
-              <Tasks {...props} tasks={tasks} onStatusChange={handleStatusChange} onTaskRemoval={handleTaskRemoval} />
+              <Tasks {...props} tasks={tasks} onUpdateTask={handleUpdateTask} onStatusChange={handleStatusChange} onTaskRemoval={handleTaskRemoval} />
             )}
           </Tab.Screen>
           <Tab.Screen name='Add' options={{
             title: 'Add Task',
             headerTintColor: '#fff',
-            headerStyle: {
-              backgroundColor: '#008080'
-            },
+            headerStyle: { backgroundColor: '#008080' },
             tabBarIcon: ({ color, size }) => (
               <Entypo name='add-to-list' size={size} color={color} />
             )
